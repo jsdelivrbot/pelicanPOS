@@ -1,0 +1,31 @@
+
+page-detail {
+    .list-item-border-bottom{
+            border-bottom: 1px solid #f0eeee;
+    }
+
+    .label-md {
+        margin: 1px 8px 0px 0;
+    }
+    .item-content{
+        padding-top:0px !important;
+        padding-bottom:0px !important;
+      }
+      .input-wrapper {
+        height: fit-content;
+      }
+
+      .save{
+        width: fit-content;
+        /* float: right; */
+        position: absolute;
+        right: 10px;
+        top: 4px;
+    }
+
+    .qtyInput{
+        width: 100%;
+        margin-top: 10px;
+        text-align: center;
+    }
+}

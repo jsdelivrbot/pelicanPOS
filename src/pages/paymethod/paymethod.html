@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-navbar>
+
+      <ion-buttons start>
+          <button ion-button icon-only menuToggle>
+              <ion-icon name="menu"></ion-icon>
+          </button>
+      </ion-buttons>
+      <div>
+          Total: {{total|currency:'USD':'true':'1.2-2'}}
+      </div>
+        <ion-buttons end style="font-size:smaller;">
+            <button ion-button end>
+                Split Payment
+            </button>
+        </ion-buttons>
+
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+      1
+    <button ion-item *ngFor="let item of payMethods" (click)="itemTapped($event, item)">
+
+              <div item-start>
+                <ion-icon [name]="item.icon"></ion-icon>
+              </div>
+              <div> {{item.name}}</div>   
+    </button>
+  </ion-list>
+</ion-content>

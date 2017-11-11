@@ -1,0 +1,86 @@
+<ion-header>
+        <ion-navbar>
+          <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+          </button>
+          <span>{{this.item.title}}</span><span style="margin-left:5px;"> {{this.total|currency:'USD':'true':'1.2-2'}}</span>
+          <button ion-button block class="save" (click)="save()">Save</button>
+        </ion-navbar>
+</ion-header>
+<ion-content>
+
+  <div>
+    
+  </div>
+    <ion-list>
+      <!-- price -->
+      <ion-item *ngIf="this.item.type == 'manual'">
+        <ion-list no-lines>
+          <ion-item>
+            <!-- price -->
+            <ion-grid>
+              <ion-row (click)="navPush('keypad')"  class="">
+                  <ion-col col-2>Price</ion-col>
+                  <ion-col >{{item.value|currency:'USD':true:'1.2-2'}}</ion-col>
+                </ion-row>
+            </ion-grid>
+          </ion-item>
+        </ion-list>
+      </ion-item>
+
+
+      <!-- quantity -->
+      <ion-item>
+          <ion-list no-lines>
+            <ion-item>
+              <!-- qty -->
+              <ion-grid>
+                <ion-row class="">
+                    <ion-col col-3>
+                      <span style="position:relative; top:12px;">Quantity:</span>
+                    </ion-col>
+                    <ion-col col-2>
+                      <button ion-button full  (click)="add()">+</button>
+                    </ion-col>
+
+                    <ion-col col><input ion-input type="text" width="25px" [(ngModel)]="this.changeVal" class="qtyInput" >  </ion-col>
+
+                    <ion-col col-2>
+                        <button ion-button full (click)="sub()">-</button>
+                    </ion-col>
+                  </ion-row>
+              </ion-grid>
+            </ion-item>
+          </ion-list>
+      </ion-item>
+
+      <!-- notes -->
+      <ion-item>
+          <ion-list no-lines>
+            <ion-item>
+              <ion-grid>
+                <ion-row class="">
+                    <ion-col col-3>
+                      <h2 style=""> Notes:</h2>
+                    </ion-col>
+                    <ion-col>
+                      <textarea ion-textarea type="text" [(ngModel)]="this.item.notes" text-wrap></textarea>  
+                    </ion-col>
+                  </ion-row>
+              </ion-grid>
+            </ion-item>
+          </ion-list>
+        </ion-item>
+        <!-- modifiers -->
+        <ion-item>
+        </ion-item>
+        <!-- remove button -->
+        <ion-item>
+          <button #btnDel ion-button full (click)="remove()">value is: {{this.removeButtonText}}</button>
+        </ion-item>
+    </ion-list>
+
+
+
+</ion-content>
+      

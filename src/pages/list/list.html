@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Total: {{total|currency:'USD':'true':'1.2-2'}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <button ion-item *ngFor="let item of items" (click)="itemTapped($event, item)">
+        <ion-grid style="width:100%;">
+          <ion-row>
+              <ion-col>{{item.title}} 
+                <span class="itemOrderQty"  *ngIf="item.quantity >1"> x {{item.quantity}} @  {{item.value}}/unit</span></ion-col>
+              <ion-col col-3>
+                <div class="money" item-end> {{getTotal(item)|currency:'USD':true:'1.2-2'}}
+                </div>
+              </ion-col>
+            </ion-row>
+            <ion-row *ngIf="item.notes">
+              <ion-col><span class="item-notes">{{item.notes}}</span></ion-col>
+            </ion-row>
+          </ion-grid>    
+    </button>
+  </ion-list>
+</ion-content>

@@ -1,0 +1,31 @@
+page-paymentmethod {
+    .itemOrderQty{
+        font-size: 13px;
+        color: gray;
+        margin-left:20px;
+    }
+
+    .item-notes{
+        font-size: 13px;
+        color: gray;
+        margin-left:20px;
+    }
+
+    .row{
+        padding: 0px;
+    }
+    .label-md{
+        padding:0;
+        margin: 0;
+    }
+    .item-md [item-end]{
+        margin: 0;
+    }
+
+    .money{
+        text-align: left !important;
+        width:100%;
+    }
+    $item-md-detail-push-show: true;
+    $item-wp-detail-push-show: true;    
+}

@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <div text-center (click)="pushNav('List')">
+      
+      <div *ngIf="this.transManager.orderStatus.items ==0">
+        {{ this.transManager.orderStatus.message}}
+      </div>
+
+      <div *ngIf="this.transManager.orderStatus.items >0" class="saleStatusCount">
+        <div style="float: Left;
+        margin-right: 10px;
+        line-height: 2em;">
+          {{ this.transManager.orderStatus.message}}
+        </div>
+          <ion-icon name="ios-browsers-outline" style="    position: relative;
+          font-size: 2.5em;
+          float: left;
+          top:-3px;">
+              <span class="cart-icon" #target>{{this.transManager.orderStatus.items}}</span>
+          </ion-icon>
+      </div>
+    </div>
+    <button ion-button block (click)="pushNav('payment')">
+      Charge {{total|currency:'USD':true:'1.2-2'}}
+    </button>
+
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <super-tabs>
+      <super-tab [root]="keypad" title="KEYPAD"></super-tab>
+      <super-tab [root]="items" title="Library"></super-tab>
+    </super-tabs>
+</ion-content>

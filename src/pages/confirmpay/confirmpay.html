@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-navbar>
+
+      <ion-buttons start>
+          <button ion-button icon-only menuToggle>
+              <ion-icon name="menu"></ion-icon>
+          </button>
+      </ion-buttons>
+      <div>
+          Total: {{total|currency:'USD':'true':'1.2-2'}}
+      </div>
+        <ion-buttons end style="font-size:smaller;">
+            <button class="btnTender" ion-button color="primary" full end>
+                Tender
+            </button>
+        </ion-buttons>
+
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+    <ion-list no-lines>
+
+            <div ion-item class="instructionText" text-wrap>
+                Amount entered is for tracking purposes only.  You will not receive a deposit for this transaction.
+            </div>
+        <ion-item>
+            <ion-icon item-start name='{{item.icon}}'></ion-icon>
+            <ion-input type="number" placeholder="{{total|currency:'USD':'true':'1.2-2'}}"></ion-input>
+        </ion-item>
+     </ion-list>
+</ion-content>

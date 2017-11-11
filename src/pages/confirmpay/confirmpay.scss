@@ -1,0 +1,56 @@
+page-payamount {
+    .itemOrderQty{
+        font-size: 13px;
+        color: gray;
+        margin-left:20px;
+    }
+
+    .item-notes{
+        font-size: 13px;
+        color: gray;
+        margin-left:20px;
+    }
+
+    .row{
+        padding: 0px;
+    }
+    .label-md{
+        padding:0;
+        margin: 0;
+    }
+    .item-md [item-end]{
+        margin: 0;
+    }
+
+    .money{
+        text-align: left !important;
+        width:100%;
+    }
+    $item-md-detail-push-show: true;
+    $item-wp-detail-push-show: true;    
+    
+    
+    
+    .instructionText{
+        margin: 0 auto;
+        font-size: large;
+        width: 90%;
+        display: block;
+        text-align: center;
+    }
+
+    .endText{
+        font-size: small;
+        color: #9E9E9E;
+    }
+
+    .btnTender{
+        color: #fff;
+        background-color: #488aff;
+    }
+
+    .item-md ion-icon[item-start] + .item-inner{
+        margin-left:0 !important;
+    }
+
+}

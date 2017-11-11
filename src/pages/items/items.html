@@ -1,0 +1,19 @@
+<ion-content>
+  <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="setFilteredItems()"></ion-searchbar>
+  
+  <ion-list>
+    <button  ion-item *ngFor="let item of items" (click)="itemTapped($event, item)">
+      <div id='{{item._id}}' class="item-icon" [style.backgroundColor]="item.icon" item-left>{{item.title}}</div>
+       <span class="item-title">{{item.title}}</span>
+       <div class="item-note" item-right>
+          {{item.note}}
+        </div>
+        <div class="item-note" item-end>
+            {{(item.value/100)|currency:'USD':true:'1.2-2'}}
+          </div>
+          </button>
+  </ion-list>
+  <button ion-button block (click)="addItem()">
+      Add Item to list
+    </button>  
+</ion-content>
