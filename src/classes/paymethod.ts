@@ -8,6 +8,10 @@ export class PayMethod{
 
     name:string="";
     icon:string;
+    route:any;
+    rules:any = {};
+
+    page:any = {};
 
     constructor(){}
 }

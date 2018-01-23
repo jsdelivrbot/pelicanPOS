@@ -95,14 +95,17 @@ export class DetailPage {
         console.log("increments is: Math.abs(this.changeVal (" + this.changeVal +") - this.item.value ("+this.item.quantity+") = "+increments);
         for(let i=0; i<increments; i++){
             if(this.changeVal < this.item.quantity){
-                this.transManager.removeItem(newItem);
-                console.log("removing item");
+                //remove this item but  do not reflect in database ... save will occure at end of bulk operations
+                this.transManager.removeItem(newItem,null,false);
+                console.log("removed item: "+ JSON.stringify(newItem) +" @ index: "+i);
             }
             else{
                 console.log("adding item");
-                this.transManager.addToOrder(newItem);
+                this.transManager.addToOrder(newItem,false);
             }
         }
+        //save the current order after all the bulk processes have been completed.
+        this.transManager.order_save();
         Object.assign(this.orig,this.item);
         this.navCtrl.pop();
     }

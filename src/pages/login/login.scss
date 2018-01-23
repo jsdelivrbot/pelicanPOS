@@ -1,0 +1,68 @@
+page-login{
+
+    .btnLogin{
+        width:100%;
+        padding:25px;
+    }
+
+    img{
+        width:150px !important;
+        height:150px !important;
+    }
+
+    .hideme{
+        border:1px solid navy;
+    }
+    .text-input-md {
+        min-width: 100px !important;
+    }
+    .col{
+        border: solid 1px rgba(158, 158, 158, 0.45) !important;
+        margin: 2%;
+        max-width:50px;
+        min-width: 50px;
+        height: 46px;
+    }
+
+    .label-md {
+        margin: 0 !important;
+        font-size: xx-large;
+        font-weight: 500;
+    }
+
+    .disclaimer{
+        width: 100%;
+        padding: 4px;
+        overflow: visible;
+        /* height: 130px; */
+        font-size: smaller;
+        word-wrap: break-word;
+        display: inline-grid;
+    }
+
+    .error {
+        color: red;
+        font-size: smaller;
+        margin-bottom: 6px;
+        display: block;
+        position: relative;
+    }
+
+    .centergrid{
+        margin: 0 auto;
+        display: block;
+        position: relative;
+        max-width: 200px;
+    }
+
+    .link{
+            color: cornflowerblue;
+            background: none;
+    }
+
+    .phone{
+        font-size: larger;
+        font-weight: bolder;
+        margin: 6px auto 12px auto;
+    }
+}

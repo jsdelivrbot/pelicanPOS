@@ -3,7 +3,7 @@ import { TransactionManager } from './../../providers/TransactionManager';
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { PayMethod } from '../../classes/paymethod';
-import { Transaction } from 'classes/transaction';
+import { Transaction } from '../../classes/transaction';
 import { swipeShouldReset } from 'ionic-angular/util/util';
 import { ConfirmPayPage } from '../../pages/confirmpay/confirmpay';
 
@@ -21,11 +21,11 @@ export class PayAmountPage {
 
 
   constructor( public navCtrl: NavController, public  navParams: NavParams, public transManager:TransactionManager)  {
-    this.loadGetData();
+    this.loadData();
   }
 
 
-    loadGetData(){
+    loadData(){
       this.item = this.navParams.get('paymethod');
       this.total= this.navParams.get('total');
       console.log(">> PayAmountPage.loadGetData(): Total: "+this.total);
@@ -33,7 +33,7 @@ export class PayAmountPage {
 
     ionViewDidEnter() {
       console.log(">> PayAmountPage.ionViewDidEnter called");
-      this.loadGetData();
+      this.loadData();
   }
 
   tender(){

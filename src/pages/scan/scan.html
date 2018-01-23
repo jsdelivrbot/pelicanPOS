@@ -1,0 +1,48 @@
+<!--
+  Generated template for the NewPage page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>scan</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <label id="lblScanText">
+    Scan Text:
+    <ion-input id="txtCode" type="text" [(ngModel)]="this.value"></ion-input>
+  </label>
+
+  <label id="lblBarcodeType">
+    Barcode Type:
+    <ion-input id="txtType" type="text" [(ngModel)]="this.type"></ion-input>
+    </label>
+
+  <label id="lblWasCanceled">
+    is Canceled:
+    <ion-checkbox [(ngModel)]="this.isCanceled"></ion-checkbox>
+  </label>
+
+  <label id="lblBarcodeType">
+    Error Text:
+    <ion-input id="txtType" type="text" [(ngModel)]="this.errorText"></ion-input>
+  </label>
+<div>
+  
+  <div *ngIf="sentinals"><br> sentinals:String[] = {{sentinals[0]}} {{sentinals[0]}}</div>
+  <br> appCode:string := {{appCode}}
+  <br> date:DateTime = {{date}} 
+  <br> subject:string = {{subject}} 
+  <br> balance:number = {{balance}}
+  <br> balCurrency:string = {{balCurrency}} 
+  <br> credit:number= {{credit}}
+  <br> credCurrency:string = {{credCurrency}} 
+  <br> uses:number={{uses}};
+</div>
+</ion-content>

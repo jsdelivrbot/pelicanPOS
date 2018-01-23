@@ -14,6 +14,7 @@ export class PayMethodPage {
 
   payMethods:PayMethod[] = [];
   total:number =0.00;
+  currency:string = "";
 
 
   constructor( public navCtrl: NavController, public  navParams: NavParams, public transManager:TransactionManager)  {
@@ -24,6 +25,8 @@ export class PayMethodPage {
       this.payMethods = this.transManager.get_PayMethods();
       //console.log("PayMethodPage.loadGetData.count: "+this.payMethods.length);
       this.total= this.navParams.get('total');
+      this.currency = this.navParams.get('currency');
+      this.transManager.set_transactionAmount(this.total, this.currency);
     }
 
 
@@ -35,7 +38,12 @@ export class PayMethodPage {
 
   itemTapped(event, item) {
 
-    this.navCtrl.push(PayAmountPage ,{"total":this.total, "paymethod":item});
+    if(item.route){
+      this.navCtrl.push(item.route ,{"total":this.total, "paymethod":item});
+    }
+    else{
+      this.navCtrl.push(PayAmountPage ,{"total":this.total, "paymethod":item});
+    }
     // That's right, we're pushing to ourselves!
     //this.navCtrl.push(PayMethodPage, {
       //item: item

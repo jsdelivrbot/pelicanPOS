@@ -4,26 +4,35 @@ import { UUID } from 'angular2-uuid';
 import { Basket } from './basket';
 import { Item } from './Item';
 import { retry } from 'rxjs/operator/retry';
+import { DatabaseProvider } from '../providers/databaseProvider';
 
 
 //Basket: a grouping of orderItems within a single order.
 export class Order{
 
-    _id:string = UUID.UUID(); // order for which this basket belongs
+    _id:string = "order_" + UUID.UUID(); // order for which this basket belongs
     _rev:string;
     baskets: Basket[] = []; //groups of items in this order
     currentBasketIndex:number = -1; //The index of the currently active basket
+    currency:string ="XCD";
+    isReadOnly:boolean = false;
+    lockedBy:string = "";
     
-
 
     constructor(){
         this.createBasket();
     }
 
+    LockedException = {
+        "message":"Order is Locked by: "+this.lockedBy,
+        "lockedby":this.lockedBy,
+        "code":450
+    };
+
     createBasket(){
         let b = new Basket();
         b.order_Id = this._id;
-        this.currentBasketIndex = this.baskets.push(new Basket())-1;
+        this.currentBasketIndex = this.baskets.push(b)-1;
     }
 
 
@@ -68,6 +77,7 @@ export class Order{
                 let collection:OrderItem[] = [];
                 let h :boolean[] = [];
 
+                
                 let headerItem = new OrderItem();
                 headerItem.title="";
                 headerItem.icon="";
@@ -85,82 +95,84 @@ export class Order{
                         headerItem.title = "Order: "+ h.length;
                         h[b._id] = true;
                         
-                        collection.push(headerItem)
+                        //uncomment line below to add a header for each basket
+                        //collection.push(headerItem)
+
                         //console.log(">> Order.getOrderItems() b.orderItems: "+JSON.stringify(b.orderItems));
                         
                         let tmpItems:Item[] = Object.assign([],b.orderItems);
-                        
+                        //tmpItems.sort();
 
                         let completedItems:Item[] = [];
                         //foreach Item in the basket
                         let i = 0;
                         let max =  tmpItems.length-1;
-                        while( i <= max ){
-                            let item = tmpItems[i];
-                            console.log(">>>> getOrderItemsByBasketQty() @ iteration: "+i);
 
-                            //if this item in the loop has been found already
-                            //remove this item from tmpItems and move on.
-                            let thisIndex = completedItems.indexOf(item);
-                            console.log(">>>> getOrderItemsByBasketQty() @ iteration: "+i+" (is item: "+JSON.stringify(item)+" is Already added to collection ?) this.index = "+thisIndex);
-                            
-                            if( thisIndex > -1){
-                                console.log("     >>>>  getOrderItemsByBasketQty() @ iteration: "+i+" YES (item: "+JSON.stringify(item._id)+" already added to collection) this.index = "+thisIndex);
-                                tmpItems.splice(thisIndex,1);
-                                console.log("     >>>>  getOrderItemsByBasketQty() tmpItems is now : "+ tmpItems.length);
-                                console.log("     >>>>  getOrderItemsByBasketQty() @ iteration: "+i );
-                                
+                        //go through each item in tmpItems and add to collection if new or ignore if old
+                        while( i <= max ){
+
+                            //current Item in question is the index from 0 to max-1
+                            let item = tmpItems[i];
+
+
+                            //search for item in collection of completed items (>-1 if found)
+                            let isUsedItem:Item[] = completedItems.filter((o)=>{
+                                console.log(">>>> getOrderItemsByBasketQty() @ iteration: "+i+"    >>> CHECKING ( id and value of item: "+JSON.stringify(item) +" to: "+JSON.stringify(o));
+                                return(item._id.toLowerCase().trim() == o._id.toLowerCase().trim() && item.value == o.value);
+                            });
+
+                                console.log(">>>> getOrderItemsByBasketQty() @ iteration: "+i+" (is item: "+JSON.stringify(item)+(isUsedItem.length >0? " has NOT been aggregated" : "has ALREADY been aggregated"));
+                                console.log("---------------------------------------------------------------------------------------------------------------------------------");
+
+                           //if this item has already been aggregated SKIP
+                            if(isUsedItem.length > 0){
+                                //do nothing and move on to the next iteration
                             }
                             else{
-                            console.log("     >>>>  getOrderItemsByBasketQty() @ iteration: "+i+" NO (item: "+JSON.stringify(item._id)+" is to be processed for collection now) this.index = "+thisIndex);
                             
-                            let items:Item[] = []; // collection of used items
+                                //get all instances of this item
+                                let items:Item[] = []; // collection of used items
 
-                            //get all instances of this item/price from b
-                            let allOfThisItem:Item[] = tmpItems.filter((oi)=>{                            
-                                //console.log(">> Order.getOrderItems().filtering(): "+JSON.stringify(oi));
-                                //console.log(">> Order.getOrderItems().filtering() return: "+(oi._id == item._id && oi.value == item.value));
-                                return (oi._id == item._id && oi.value == item.value);
-                            });
+                                //get all instances of this item/price from b
+                                let allOfThisItem:Item[] = tmpItems.filter((oi)=>{                            
+                                    //console.log(">> Order.getOrderItems().filtering(): "+JSON.stringify(oi));
+                                    //console.log(">> Order.getOrderItems().filtering() return: "+(oi._id == item._id && oi.value == item.value));
+                                    return (oi._id == item._id && oi.value == item.value);
+                                });
 
                             //reduce allOfThisItem
                             let myOrderItem:OrderItem = new OrderItem();
+
+
+                            // if there is at least one item in this array
                             if(allOfThisItem.length != 0){
  
-                        
+                                //GET THE FIRST ITEM OF THIS DUPLICATE ARRAY
                                 myOrderItem = allOfThisItem[0] as OrderItem;
                                 //console.log(">> order.getOrderItems() >>getting qty ofJSON.stringify(tmpItems) OrderItem : " + JSON.stringify(myOrderItem));
                                 
+                                //set the quantity of this item to the count of allofthisItem array
                                 myOrderItem.quantity = allOfThisItem.length;
                                 //console.log(">> order.getOrderItems() >> qty (count value of an item): " + myOrderItem.quantity);
                                 
+
+                                //Add this new item to the display array (Collection)
                                 collection.push(myOrderItem);
+
+                                //Add this item to the completedItems (Array of already processed items)
                                 completedItems.push(myOrderItem);
 
 
-                                //find each instance of this item and remove it from tmpItems
-                                let a=0;
-                                let aIndex=0;
-                                for(a=1; a< allOfThisItem.length; a++){
-                                    let aIndex = tmpItems.indexOf(item);
-                                    tmpItems.splice(aIndex,1);
-                                    console.log(">> duplicate "+item._id+" removed from "+aIndex + " in loop "+a );
-                                }
-                                max = tmpItems.length-1;
-                                console.log(">> max is now "+max+" removed from "+aIndex + " in loop "+a );
-                                
                             }
                         }
+
+                        //processing of this item is completed, move on to the next item and repeat
                         i++;
-
-                            //console.log(">> order.getOrderItems() >> The new tmpItems Number of Items: " + JSON.stringify(tmpItems.length));
-                            //console.log(">> order.getOrderItems() >> The new tmpItems : " + JSON.stringify(tmpItems));
                         } //end of while loop   
-
                     }
     
                 });
-                respond(collection);
+                respond(collection); //return with the display collection only
     
             }catch(ex){
                 reject(ex);
@@ -170,6 +182,10 @@ export class Order{
     }
 
     addItem(item:Item){
+        if(this.isReadOnly){
+            throw this.LockedException;
+        }
+        
         if(this.currentBasketIndex == -1){
             //console.log(">> Order.addItem(item) about to create baseket");
             this.createBasket();
@@ -177,6 +193,22 @@ export class Order{
         }
         //console.log(">> Order.addItem(item) about to add Item to basket with index of:  "+ this.currentBasketIndex);
         this.currentBasket().addItem(item);
+
+
+        //Save TO POS DATABASE
+        let db:DatabaseProvider = new DatabaseProvider(); 
+       //console.log(">>> order.addItem(item) item is: '"+JSON.stringify(item));
+        
+        //make the put call
+        db.put(this._id,this).then(o=>{
+           //console.log(">>> order.addItem(item) saved item is: '"+JSON.stringify(o));
+            this._rev = o.rev;
+        }).catch(ex=>{
+           //console.log("***  order.addItem(item) error saving: '"+JSON.stringify(ex));
+            
+        });      
+        
+        
     }
 
     currentBasket(){

@@ -1,0 +1,76 @@
+<ion-header>
+
+</ion-header>
+<ion-content>
+    <h2>Setup for Terminal</h2>
+    <h3>{{this.terminalId}}</h3>
+    <ion-slides #slides (ionSlideDidChange)="slideChanged()">
+        <ion-slide>
+            <h3>Merchant Setup</h3>
+            <ion-list>
+                    <ion-item>
+                            <ion-label floating>Telephone Number</ion-label>
+                            <ion-icon name="telephone" item-left></ion-icon>
+                            <ion-input type="number" ([NgModule])="username" Required></ion-input>
+                        </ion-item>
+                        <ion-item>
+                    <ion-label floating>Official Company Name (used for banking)</ion-label>
+                    <ion-icon name="contact" item-left></ion-icon>
+                    <ion-input type="text" ([NgModule])="name"></ion-input>
+                </ion-item>
+                <ion-item>
+                        <ion-label floating>Display Name (what your customers call you)</ion-label>
+                        <ion-icon name="contact" item-left></ion-icon>
+                        <ion-input type="text"([NgModule])="displayname"></ion-input>
+                </ion-item>
+            </ion-list>
+
+        </ion-slide>
+        <ion-slide>
+                <h3>Admin Account Setup</h3>
+                <ion-list>
+                    <ion-item>
+                            <ion-label floating>Admin username (telephone number)</ion-label>
+                            <ion-icon name="contact" item-left></ion-icon>
+                            <ion-input type="number"([NgModule])="username"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                            <ion-label floating>Admin password </ion-label>
+                            <ion-icon name="contact" item-left></ion-icon>
+                            <ion-input type="number" length="4" ([NgModule])="pin"></ion-input>
+                    </ion-item>
+                </ion-list>
+    
+        </ion-slide>
+        <ion-slide>
+                <h3>Add Operators</h3>
+                <ion-grid>
+                        <ion-row>
+                                <ion-col>user number</ion-col>
+                                <ion-col>Display Name</ion-col>
+                                <ion-col>pin</ion-col>
+                                <ion-col>Can Cashier ?</ion-col>
+                                <ion-col>Can Topup ?</ion-col>
+                            </ion-row>
+                            <ion-row ng-repeat="user in this.merchant.operators">
+                                    <ion-col><label>{{o.number}}</label></ion-col>
+                                    <ion-col>
+                                        <ion-input ([NgModel])="o.displayname" type="text"></ion-input>
+                                    <</ion-col>
+                                    <ion-col>pin</ion-col>
+                                    <ion-col>Can Cashier ?</ion-col>
+                                    <ion-col>Can Topup ?</ion-col>
+                                </ion-row>
+                            </ion-grid>
+        </ion-slide>
+        <ion-slide>
+            Bank Account Info
+        </ion-slide>
+    </ion-slides>
+    <ion-footer>
+        <div class="footer-bar">
+        <button ion-button #btnPrev (click)="btnPress('prev')">< Back</button>
+        <button ion-button #btnNext (click)="btnPress('next')">Next ></button>
+        </div>
+    </ion-footer>
+</ion-content>

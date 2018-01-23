@@ -1,0 +1,37 @@
+page-topup{
+
+
+    ion-item{
+        margin-top:12px !important;
+    }
+    .circle_bg {
+        background-color: aliceblue;
+        border-radius: 50%;
+        width: 10px;
+        height: 10px;
+        text-align: center;
+        border: 1px solid darkgray;
+        vertical-align: middle;
+        padding: 11px 11px 11px 11px;
+        line-height: 2px;
+        position: relative;
+        float: left;
+        margin: 0px 5px;
+    }    
+
+    .circle_bg span {
+        left: -3px;
+        position: relative;
+    }
+    ion-icon{
+        font-size: xx-large !important;
+    }
+
+    .amount
+    {
+        border: 2px solid #488aff;
+        padding-left: 10px;
+        margin-bottom: 17px;
+    }    
+}
+

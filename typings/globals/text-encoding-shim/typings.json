@@ -1,0 +1,10 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "C:\\Users\\d01587937\\Documents\\KenStuff\\pelicansecured\\pos\\PelicanPos\\node_modules\\text-encoding-shim\\package.json",
+    "raw": "npm:text-encoding-shim",
+    "main": "index.js",
+    "version": "1.0.0",
+    "name": "text-encoding-shim"
+  }
+}

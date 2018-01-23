@@ -12,19 +12,19 @@ import { PayMethod } from '../../classes/paymethod';
 
 export class ConfirmPayPage {
 
-  total:number = 0.00;
   item:PayMethod ;
+  itemstr:string;
 
 
-  constructor( public navCtrl: NavController, public  navParams: NavParams, public transManager:TransactionManager)  {
+  constructor( public navCtrl: NavController, public  navParams: NavParams)  {
     this.loadGetData();
   }
 
 
     loadGetData(){
-      this.item = this.navParams.get('paymethod');
-      this.total= this.navParams.get('total');
-      console.log(">> PayAmountPage.loadGetData(): Total: "+this.total);
+      this.item = this.navParams.get('transactionStatus');
+      console.log(">> ConfirmPay.loadGetData(): transactionStatus: "+this.item);
+      this.itemstr = JSON.stringify(this.item);
     }
 
     ionViewDidEnter() {

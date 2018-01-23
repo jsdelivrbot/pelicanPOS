@@ -6,6 +6,8 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
 import { ItemsPage } from '../pages/items/items';
+import { MenuPage } from '../pages/menu/menu';
+import { TopupPage } from '../pages/topup/topup';
 import { KeypadPage } from '../pages/keypad/keypad';
 import { DetailPage } from '../pages/detail/detail';
 import {PayMethodPage} from '../pages/paymethod/paymethod'
@@ -13,14 +15,31 @@ import {PayMethodPage} from '../pages/paymethod/paymethod'
 import {InventoryManager} from '../providers/InventoryManager';
 import {TransactionManager} from '../providers/TransactionManager';
 
+import {DatabaseProvider} from '../providers/databaseProvider';
+import {EncryptionService} from '../providers/encryptionService';
+import {PouchDBService} from '../providers/pouchdb.service';
+import {UserManager} from '../providers/userManager';
+import {MerchantManager} from '../providers/merchantManager';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 
 import { SuperTabsModule } from 'ionic2-super-tabs';
 import { UUID } from 'angular2-uuid';
 import { PayAmountPage } from '../pages/payamount/payamount';
+import { ScanPage } from '../pages/scan/scan';
+import { ConfirmPayPage } from '../pages/confirmpay/confirmpay';
+import { LoginPage } from '../pages/login/login';
+import { Config} from '../providers/configProvider';
+
+import { HTTP } from '@ionic-native/http';
+import { CurrencyPipe } from '@angular/common';
+
+import {Crypto} from '../providers/crypto';
+import { UniqueDeviceID } from '@ionic-native/unique-device-id';
+import { SetupPage } from '../pages/setup/setup';
 
 @NgModule({
   declarations: [
@@ -28,10 +47,16 @@ import { PayAmountPage } from '../pages/payamount/payamount';
     HomePage,
     ListPage,
     ItemsPage,
+    MenuPage,
+    TopupPage,
     KeypadPage,
     DetailPage,
     PayMethodPage,
-    PayAmountPage
+    PayAmountPage,
+    ScanPage,
+    ConfirmPayPage,
+    LoginPage,
+    SetupPage
   ],
   imports: [
     BrowserModule,
@@ -44,18 +69,35 @@ import { PayAmountPage } from '../pages/payamount/payamount';
     HomePage,
     ListPage,
     ItemsPage,
+    MenuPage,
+    TopupPage,
     KeypadPage,
     DetailPage,
     PayMethodPage,
-    PayAmountPage
+    PayAmountPage,
+    ScanPage,
+    ConfirmPayPage,
+    LoginPage,
+    SetupPage
   ],
   providers: [
+    UniqueDeviceID,
+    Crypto,
+    CurrencyPipe,
+    HTTP,
+    Config,
+    UserManager,
+    MerchantManager,
+    PouchDBService,
+    DatabaseProvider,
+    EncryptionService,
     InventoryManager,
     TransactionManager,
     StatusBar,
     SplashScreen,
     ScreenOrientation,
     UUID,
+    BarcodeScanner,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

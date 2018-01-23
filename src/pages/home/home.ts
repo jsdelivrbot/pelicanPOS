@@ -18,6 +18,7 @@ export class HomePage {
   keypad:any = KeypadPage;
   items:any = ItemsPage;
   total:number = 0.00;
+  currency:string ="";
 
   constructor(public events:Events, public navCtrl: NavController, private transManager:TransactionManager, private renderer:Renderer2, private El:ElementRef) {
     this.events.subscribe('functionCall:itemAdded', data=>{
@@ -27,8 +28,20 @@ export class HomePage {
       });
       
       this.moveToCart(data.caller,data);
+      this.transManager.getSaleStatus();
     });
 
+  }
+
+  ionViewDidEnter() {
+    if( this.transManager.currentOrder()){
+      //update the total value
+      this.transManager.currentOrder().total().then(o=>{
+        this.total = o
+      });
+      //update items 
+      this.transManager.getSaleStatus();
+   }
   }
 
   public moveToCart(ref,data){
@@ -37,6 +50,8 @@ export class HomePage {
 
         const div = document.getElementById("checkoutDiv");// this.renderer.createElement('div');
         let item = document.getElementById(ref);
+        item.style.display = "block !important";
+        this.renderer.setStyle(item,"display","block");
 
         //remove any previous moveToCart Class
         this.renderer.removeClass(div,"moveToCart");
@@ -51,6 +66,7 @@ export class HomePage {
         div.style.bottom = (rect.bottom + (data.offsetBottom ? data.offsetBottom:0)) +"px";
         div.style.left = (rect.left + (data.offsetLeft ? data.offsetLeft:0)) +"px";
         
+        this.renderer.setStyle(div,"display","block");
         this.renderer.setStyle(div,"background-color","red");
 
         //apply the class to move
@@ -83,7 +99,7 @@ export class HomePage {
 
         case 'payment':
         console.log("HomePage.pushNav(): paymethodPage is called with:"+val);
-        this.navCtrl.push(PayMethodPage,{"total":this.total});
+        this.navCtrl.push(PayMethodPage,{"total":this.total, "currency":this.transManager.currentOrder().currency});
         break;
         
       }

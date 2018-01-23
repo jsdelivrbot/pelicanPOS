@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>      Select user to top-up</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+    <ion-list>
+
+
+      <ion-item>
+          <ion-label floating primary> <div class="circle_bg"><span>1</span></div>Enter top-up amount ($XCD)</ion-label>
+          <ion-input class="amount" [(ngModel)]="this.amount" type="number" (input)="onAmountInput()"></ion-input>
+      </ion-item>
+      
+      <ion-item style="display: none;">
+        
+          <ion-label><div class="circle_bg"><span>2 &nbsp;</span></div> Select a payment method:
+          </ion-label><ion-select>
+                <ion-option value="cash" selected>Cash</ion-option>
+                <ion-option value="check" >Check</ion-option>
+                <ion-option value="card" >Debit/Credit Card</ion-option>
+            </ion-select>
+          
+        </ion-item>              
+      <ion-item *ngIf="status == ''">
+        <button [disabled]="!isenabled" large outline ion-button item-left (click)="onClick('scan')">
+          <div style="font-size:x-small">
+            <ion-icon name="barcode"  style="font-size:small"></ion-icon>
+            <br />
+            <label  style="font-size:xx-small">by</label>
+            <br />
+            <label>scanner</label>
+        </div>
+      </button>
+
+
+      <button [disabled]="!isenabled" large outline ion-button item-left (click)="onClick('manual')">
+          <div style="font-size:x-small">
+              <ion-icon name="contact"  style="font-size:small"></ion-icon>
+              <br />
+              <label  style="font-size:x-small">by</label>
+              <br />
+              <label  style="font-size:xx-small">User ID</label>
+          </div>
+      </button>
+      </ion-item>
+      <ion-item *ngIf="status == 'manual'">
+
+        <ion-label>
+          <ion-list no-lines>
+            <ion-item>
+                <ion-input type="tel" placeholder="Enter account number to topup" [(ngModel)]="this.userId"></ion-input>
+            </ion-item>  
+            <ion-item>
+
+                    <button ion-button block primary [disabled]="this.userId == ''" (click)="onClick('topup')">Top-up {{this.amount| currency:'USD':true:'1.2-2'}} </button>
+            </ion-item>   
+          </ion-list>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+</ion-content>

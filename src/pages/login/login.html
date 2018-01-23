@@ -1,0 +1,75 @@
+
+    
+    
+
+<ion-content text-center>
+    <ion-navbar></ion-navbar>
+    <H1 text-center>Enter code</H1>
+
+    <div>Operator Login</div>
+    <div class="centergrid">
+        <ion-grid>
+            <ion-row>
+                <ion-col>
+                    <ion-label>{{this.char1}}</ion-label>
+                </ion-col>
+                <ion-col>
+                        <ion-label>{{this.char2}}</ion-label>
+                </ion-col>
+                <ion-col>
+                        <ion-label>{{this.char3}}</ion-label>
+                </ion-col>
+                <ion-col>
+                    <ion-label> - </ion-label>
+                </ion-col>
+            
+                <ion-col>
+                    <ion-label>{{this.char4}}</ion-label>
+                </ion-col>
+                <ion-col>
+                    <ion-label>{{this.char5}}</ion-label>
+                </ion-col>
+                <ion-col>
+                    <ion-label>{{this.char6}}</ion-label>
+                </ion-col>
+                <ion-col>
+                    <ion-label>{{this.char7}}</ion-label>
+                </ion-col>
+            </ion-row>
+            <ion-row></ion-row>
+        </ion-grid>
+    <div style="width:93%; margin:auto;">
+        <ion-grid  no-padding>
+            <ion-row>
+                <ion-col><button ion-button (click)="type('1')">1</button></ion-col>
+                <ion-col><button ion-button (click)="type('2')">2</button></ion-col>
+                <ion-col><button ion-button (click)="type('3')">3</button></ion-col>
+            </ion-row>
+                
+            <ion-row>
+                <ion-col><button ion-button (click)="type('4')">4</button></ion-col>
+                <ion-col><button ion-button (click)="type('5')">5</button></ion-col>
+                <ion-col><button ion-button (click)="type('6')">6</button></ion-col>
+            </ion-row>
+
+            <ion-row>
+                <ion-col><button ion-button (click)="type('7')">7</button></ion-col>
+                <ion-col><button ion-button (click)="type('8')">8</button></ion-col>
+                <ion-col><button ion-button (click)="type('9')">9</button></ion-col>
+            </ion-row>
+
+            
+            <ion-row>
+                    <ion-col><button ion-button (click)="type('.')">.</button></ion-col>
+                    <ion-col><button ion-button (click)="type('0')">0</button></ion-col>
+                    <ion-col><button ion-button (click)="type('<')"><</button></ion-col>
+                </ion-row>
+            
+            </ion-grid>
+    </div>        
+</div>  
+    
+    <div *ngIf="isCodeWrong" class="error">Incorrect code. Please try again</div>
+    <button ion-buton class="link" (click)="resend()">Haven't got it ?</button>
+
+</ion-content>
