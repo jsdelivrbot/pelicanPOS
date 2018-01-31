@@ -10,6 +10,7 @@ import { UserData } from '../../classes/userData';
 import { ConfirmPayPage } from '../../pages/confirmpay/confirmpay';
 import { UserManager } from '../../providers/userManager';
 import { User } from '../../classes/user';
+import { Operator } from '../../classes/operator';
 
 /*
   Generated class for the scan page.
@@ -89,7 +90,7 @@ export class ScanPage {
                     this.userData = this.setUser(result);
                     console.log("*** ScanPage.barcodescanner.scan() >> userData is: "+ JSON.stringify(this.userData));
                     
-                    let u:User = new User();
+                    let u:Operator = new Operator();
                     u._id = this.userData.subject;
                     u.userData = this.userData;
 

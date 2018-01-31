@@ -17,6 +17,8 @@ import { UserManager } from '../providers/userManager';
 import {Config} from '../providers/configProvider';
 import { Response } from '@angular/http/src/static_response';
 import { MerchantManager } from '../providers/merchantManager';
+import { Operator } from '../classes/operator';
+import { Merchant } from '../classes/merchant';
 
 
 
@@ -335,13 +337,13 @@ export class TransactionManager{
  
             console.log(">>> transactionManager.makeTransaction(): showDate: "+showDate);
             
-            let myProfile: User = this.userManager.get_currentUser();
+            let myProfile: Merchant = this.merchantManager.get_CurrentMerchant();
             console.log(">>> transactionManager.makeTransaction(): myProfile: "+JSON.stringify(myProfile));
             
-            console.log(">>>>  transactionManager.makeTransaction(): CurrentUser: " + JSON.stringify(myProfile._id));
+            console.log(">>>>  transactionManager.makeTransaction(): CurrentMerchant: " + JSON.stringify(myProfile._id));
 
         let d = {
-            "_id": myProfile._id + "_" + to._id + "_" + showDate,
+            "_id": myProfile._id + "_" + to + "_" + showDate,
             "amount": amount.toString(),
             "description": comment,
             "currency": currency,
@@ -355,28 +357,39 @@ export class TransactionManager{
     }
 
 
-topup(userid:string, amount:number):Promise<Transaction>{
+topup(recipientId:string, amount:number):Promise<Transaction>{
     alert("topup");
     
         
         console.log(" >>>  Entering transactionManager.topup() about to determine topup type: ");
 
         let results:any
-        return new Promise((resolve, reject) => {
+        return new Promise<Transaction>((resolve, reject) => {
 
-                //generate the transaction
-                console.log(" >>>  Entering transactionManager.topup() UserManager: : "+JSON.stringify( this.merchantManager.get_CurrentMerchant()));
-                let t = this.makeTransaction("topup",userid, amount, "Fastpass Manual Topup from: "+ this.merchantManager.get_CurrentMerchant().displayName+ " to: "+userid);
-                console.log(" >>>  transactionManager=>topup() t: " + JSON.stringify(t));
+            let sender = this.merchantManager.get_CurrentMerchant()._id;
+            console.log(" >>>  transactionManager=>topup() sender: " + sender);
+            console.log(" >>>  transactionManager=>topup() recipientId: " + recipientId);
+            
+            //generate the transaction
+            let t = this.makeTransaction("topup",recipientId, amount, "Fastpass Manual Topup from: "+ this.merchantManager.get_CurrentMerchant().displayName+ " to: "+recipientId);
+            console.log(" >>>  transactionManager=>topup() t: " + JSON.stringify(t));
+            
+            this.userData = this.merchantManager.get_CurrentMerchant().userData;
+            
+            console.log(" >>>  transactionManager=>topup() transaction Amount: " + JSON.stringify(amount));
+            console.log(" >>>  transactionManager=>topup() Availale Balance: " + JSON.stringify(this.userData.availablebalance));
+            console.log(" >>>  transactionManager=>topup() Credit: " + JSON.stringify(this.userData.credit));
 
                   //if the transaction amount is greater than available spending facility then reject
                   if(this._transaction.amount > (this.userData.availablebalance+this.userData.credit)){
                     let e:Transaction = new Transaction();
                     e.statusCode = 400;
                     e.status = "Insufficient funds";
+                    console.log(" *********  transactionManager=>topup() error NSF Balance is: " + (this.userData.availablebalance+this.userData.credit));
                     reject(e);
                 }
 
+                console.log(" >>>>>>  transactionManager=>topup()  Balance is Good: " + this._transaction.amount+" of: "+(this.userData.availablebalance+this.userData.credit));
 
                 this.fastpassDB.put(t._id, t).then((data) => {
                     console.log("transactionManager=>topup: local save completed of data:'" + JSON.stringify(t) + "'");
@@ -437,7 +450,65 @@ tender():Promise<Transaction>{
 
         
 /**************************************************************************************************
- * USER IDENTIFICATION METHODS
+ * TRANSACTION LIST METHODS
+****************************************************************************************************/
+
+//get live list of transactions.
+getTransactions(){
+    if(this.data){
+        return Promise.resolve(this.data);
+    }
+    return new Promise(resolve =>{
+        this.fastpassDB.fetch().then((result)=>{
+            this.data = [];
+            let docs = result.rows.map((row)=>{
+                this.data.push(row.doc);
+            });
+        });
+        resolve(this.data);
+        this.db.changes({live:true, since:'now', include_docs:true }).on('chang{}e',(change)=>{
+            this.handleChange(change);
+        });
+    }).catch(err=>{
+        console.log("************* TransactionManager.getTransactions() error: "+ JSON.stringify(err));
+    });
+
+}
+
+
+handleChange(change:any){
+    let changedDoc = null;
+    let changedIndex = null;
+   
+    this.data.forEach((doc, index) => {
+   
+      if(doc._id === change.id){
+        changedDoc = doc;
+        changedIndex = index;
+      }
+   
+    });
+   
+    //A document was deleted
+    if(change.deleted){
+      this.data.splice(changedIndex, 1);
+    }
+    else {
+   
+      //A document was updated
+      if(changedDoc){
+        this.data[changedIndex] = change.doc;
+      }
+   
+      //A document was added
+      else {
+        this.data.push(change.doc);
+      }
+   
+    }    
+}
+/**************************************************************************************************
+ * END OF TRANSACTION LIST METHODS
 ****************************************************************************************************/
 
 }

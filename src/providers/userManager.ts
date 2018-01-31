@@ -8,6 +8,7 @@ import { DateTime } from 'ionic-angular/components/datetime/datetime';
 import { Crypto } from '../providers/crypto';
 import { useAnimation } from '@angular/core/src/animation/dsl';
 import { Merchant } from '../classes/merchant';
+import { Operator } from '../classes/operator';
 
 
 /*
@@ -19,7 +20,7 @@ import { Merchant } from '../classes/merchant';
 @Injectable()
 export class UserManager {
 
-    private _currentUser:User;
+    private _currentUser:Operator;
     private remote: any = "http://127.0.0.1:5984/fastpass";
     data: any;
     db: PouchDBService;
@@ -55,12 +56,12 @@ export class UserManager {
         });
     }
 
-    set_CurrentUser(o:User) {
+    set_CurrentUser(o:Operator) {
         this._currentUser = o;
     }
 
     //if a current user is activated return otherwise return null
-    get_currentUser(): User {
+    get_currentUser(): Operator {
 
         //if a user is currently 
         if (this._currentUser != null) {

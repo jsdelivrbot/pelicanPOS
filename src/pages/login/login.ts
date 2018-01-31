@@ -123,7 +123,7 @@ export class LoginPage implements AfterViewInit {
 
                 console.log("IS SET IS: "+isSet);
                 if(isSet){
-                    this.navCtrl.push(MenuPage);
+                    this.navCtrl.setRoot(MenuPage);
                 } 
                 else{
                     this.isCodeWrong = true;
@@ -136,7 +136,7 @@ export class LoginPage implements AfterViewInit {
     }
 
     goToSetup(){
-        this.navCtrl.push(SetupPage);
+        this.navCtrl.setRoot(SetupPage);
     }
     updateFields(){
         console.log("H5");

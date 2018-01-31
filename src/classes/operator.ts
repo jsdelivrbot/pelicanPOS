@@ -5,7 +5,7 @@ export class Operator extends User{
 
     operatorNumber:string;
     enabled:boolean = true;
-    permissions:any[] =[];
+    permissions:Permission[] =[];
     isAdmin:boolean = false;
     isNetworkAdmin:boolean = false;
     
@@ -22,6 +22,7 @@ export class Permission{
     canRead:boolean = false;
     canWrite:boolean = false;
     canExecute:boolean = false;
+    
 
     constructor(){
 

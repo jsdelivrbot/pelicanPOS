@@ -78,7 +78,7 @@ export class MerchantManager{
             let password:string = operatorPassword.substring(3);
             console.log("merchantManager.setOperatorAsCurrent("+operatorPassword+"): password: "+password);
             
-            let u:User = this._currentMerchant.getOperators()[opPos-1];
+            let u:Operator = this._currentMerchant.getOperators()[opPos-1];
             console.log("merchantManager.setOperatorAsCurrent("+operatorPassword+"): user: "+JSON.stringify(u));
             
             if(!u){

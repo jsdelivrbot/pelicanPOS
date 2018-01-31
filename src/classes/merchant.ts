@@ -66,7 +66,7 @@ export class Merchant extends User {
                 }
                 else{
                     o.permissions.forEach((p)=>{
-                        if(p.trim().toLowerCase() == role.trim().toLowerCase()){
+                        if(p.itemName.trim().toLowerCase() == role.trim().toLowerCase()){
                             ops.push(o);
                         }
                     });

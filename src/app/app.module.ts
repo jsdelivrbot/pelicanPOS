@@ -18,6 +18,7 @@ import {TransactionManager} from '../providers/TransactionManager';
 import {DatabaseProvider} from '../providers/databaseProvider';
 import {EncryptionService} from '../providers/encryptionService';
 import {PouchDBService} from '../providers/pouchdb.service';
+import {pouchdb} from 'pouchdb';
 import {UserManager} from '../providers/userManager';
 import {MerchantManager} from '../providers/merchantManager';
 
@@ -40,6 +41,7 @@ import { CurrencyPipe } from '@angular/common';
 import {Crypto} from '../providers/crypto';
 import { UniqueDeviceID } from '@ionic-native/unique-device-id';
 import { SetupPage } from '../pages/setup/setup';
+import {TransactionPage} from '../pages/transaction/transaction';
 
 @NgModule({
   declarations: [
@@ -56,7 +58,8 @@ import { SetupPage } from '../pages/setup/setup';
     ScanPage,
     ConfirmPayPage,
     LoginPage,
-    SetupPage
+    SetupPage,
+    TransactionPage
   ],
   imports: [
     BrowserModule,
@@ -78,7 +81,8 @@ import { SetupPage } from '../pages/setup/setup';
     ScanPage,
     ConfirmPayPage,
     LoginPage,
-    SetupPage
+    SetupPage,
+    TransactionPage
   ],
   providers: [
     UniqueDeviceID,
