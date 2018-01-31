@@ -13,7 +13,9 @@ import { asNativeElements } from "@angular/core/src/debug/debug_node";
 import { MerchantManager } from "../../providers/merchantManager";
 import { Merchant } from "../../classes/merchant";
 import { UniqueDeviceID } from '@ionic-native/unique-device-id';
-import {Operator} from "classes/operator";
+import {Operator} from "../../classes/operator";
+import {MenuPage} from "../../pages/menu/menu";
+import { SetupPage } from "../../pages/setup/setup";
 
 
 
@@ -70,7 +72,7 @@ export class LoginPage implements AfterViewInit {
     char5=""
     char6=""
     char7=""
-  
+    merchant:Merchant = new Merchant();
 
 
     //login credentials
@@ -81,38 +83,10 @@ export class LoginPage implements AfterViewInit {
 
     constructor(public userManager:UserManager, public merchantManager:MerchantManager,  public navParams:NavParams, public navCtrl:NavController,  public alertCtrl:AlertController, public modalCtrl:ModalController){
 
-
-        console.log("H1");
+        console.log("Current Merchant is: "+this.merchantManager.get_CurrentMerchant());
+        this.merchant = merchantManager.get_CurrentMerchant();
         //setting Merchant manually for now
-        let M:Merchant = new Merchant();
-        M._id = "merchant1"
-        M.displayName = "Kieth's Burger Shack";
-
-        let u1:Operator = new Operator();
-        u1._id="u1";
-        u1.displayName="operator One";
-        u1.loginName="operator1";
-        u1.pin = this.userManager.setPin("0011234");
-        M.operators.push(u1);
-        
-        let u2:Operator = new Operator();
-        u2._id = "u2";
-        u2.displayName="operator Two";
-        u2.loginName="operator2";
-        u2.pin = this.userManager.setPin("0011234");
-        //this.userManager.setPin(u2,"0021234");
-        M.operators.push(u2);
-        
-
-        let u3:Operator = new Operator();
-        u3._id = "u3";
-        u3.displayName="operator Three";
-        u3.loginName="operator3";
-        u3.pin = this.userManager.setPin("0031234");
-        //this.userManager.setPin(u3,"0031234");
-        M.operators.push(u3);
-
-        console.log("H2");
+         console.log("H2");
         
     }
 
@@ -141,17 +115,29 @@ export class LoginPage implements AfterViewInit {
     }
 
     login(){
-        alert("checking login");
+        //alert("checking login");
         
         console.log("H3");
         if(true){
-            let isSet = true; //set this.merchantManatger.setOperatorAsCurrent(this.password);
-            if(isSet){
+            this.merchantManager.setOperatorAsCurrent(this.code).then(isSet=>{
 
-            }
+                console.log("IS SET IS: "+isSet);
+                if(isSet){
+                    this.navCtrl.push(MenuPage);
+                } 
+                else{
+                    this.isCodeWrong = true;
+                }
+                this.code = "";
+                this.updateFields();
+    
+            });
         }
     }
 
+    goToSetup(){
+        this.navCtrl.push(SetupPage);
+    }
     updateFields(){
         console.log("H5");
         

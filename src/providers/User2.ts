@@ -5,7 +5,7 @@ import 'rxjs/add/operator/map';
 import { Card } from '../classes/card';
 
 
-export class User{
+export class User2{
 
 	 _id:string;
 	 _rev:string;

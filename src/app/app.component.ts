@@ -18,6 +18,8 @@ import { LoginPage } from '../pages/login/login';
 import { retry } from 'rxjs/operator/retry';
 import { App } from 'ionic-angular';
 import { SetupPage } from '../pages/setup/setup';
+import { Terminal } from '../classes/terminal';
+import { Merchant } from '../classes/merchant';
 
 @Component({
     templateUrl: 'app.html'
@@ -25,7 +27,10 @@ import { SetupPage } from '../pages/setup/setup';
 export class MyApp {
     @ViewChild(Nav) nav: Nav;
 
-    rootPage: any = SetupPage;
+    rootPage: any;
+    myPage:any;
+    public merchantManager:MerchantManager;
+    public userManager:UserManager;
 
     pages: Array<{ title: string, component: any }>;
 
@@ -34,18 +39,13 @@ export class MyApp {
         public statusBar: StatusBar,
         public splashScreen: SplashScreen,
         private screenOrientation: ScreenOrientation,
-        public userManager:UserManager,
-        public merchantManager:MerchantManager,
+        public um:UserManager,
+        public mm:MerchantManager,
         private app:App) {
 
-            app.viewWillEnter.subscribe(() =>{
-                try{         
-                }catch(err){
-                    alert("app.viewWillEnter.subscribe error: "+JSON.stringify(err));    
-                }   
-
-            });            
-            
+    
+        this.merchantManager = mm;
+        this.userManager = um;            
         this.initializeApp();
         //this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);
 
@@ -67,8 +67,67 @@ export class MyApp {
             // Here you can do any higher level native things you might need.
             this.statusBar.styleDefault();
             this.splashScreen.hide();
+
+            console.log(">>>>> app.components.initializeApp() getting _local/fastPassPOS");
+            this.merchantManager.get_localMerchants().then(t=>{
+                console.log(">>>>> app.components.initializeApp() _local/fastPassPOS is: "+JSON.stringify(t));
+                if(t){
+                   //there is a local terminal setting active
+                   let term:Terminal = (t as Terminal);
+                   //console.log(">>>>> app.components.initializeApp() _local/fastPassPOS: "+JSON.stringify(t));
+
+                       //only 1 associated merchant was found so set as default
+                       console.log(">>>>> app.components.initializeApp() number of merchants found: "+term.merchantIds.length);
+                       this.merchantManager.get_Merchant(term.merchantIds[0]).then(m=>{
+                            console.log(">>>>> app.components.initializeApp() setting current merchant as: "+JSON.stringify(m));
+                            this.merchantManager.set_CurrentMerchant(m);
+                            this.myPage = MenuPage;
+                                //this.nav.push(MenuPage,{"merchant":m });
+
+                            //Merchant is set now determine if a user is known
+                            if(!this.userManager.get_currentUser()){
+                                this.myPage = LoginPage;
+                            } 
+                            this.nav.setRoot(this.myPage);
+                        });
+                }
+
+            }).catch(err=>{
+                console.log("************ app.components.initializeApp()error getting Merchant: "+JSON.stringify(err));
+                
+            }); //END OF TERMINAL
             
+           //set subscription for every page enter to check for currentMerchant
+           this.app.viewWillEnter.subscribe(() =>{
+            try{ 
+
+                console.log(">>>>> app.components.constructor() app.viewWillEnter subscription called: ");
+                if(!this.merchantManager.get_CurrentMerchant() && this.app.getActiveNav().getActive().name != "LoginPage"){
+                    console.log(">>>>> app.components.constructor() app.viewWillEnter subscription called because no Current Merchant is found: ");
+                    this.rootPage = SetupPage;
+                    console.log(">>>>> app.components.constructor() app.viewWillEnter subscription setting rootPage to SetupPage: ");
+                }else{
+                    //current merchant found checking for currentUser
+                    let u = this.userManager.get_currentUser();
+                    //alert("Current User is: "+JSON.stringify(u));
+                    
+                    if(!this.userManager.get_currentUser()){
+                        console.log(">>>>> app.components.constructor() app.viewWillEnter subscription setting rootPage to Login, Merchant found, but no current user: ");
+                        console.log(">>>>> app.components.constructor() app.viewWillEnter this.nav.getActive().name: "+this.nav.getActive().name + " ; LoginPage.name: "+ LoginPage.name);
+                        if(this.nav.getActive().name!=  "LoginPage" && this.nav.getActive().name!=  "SetupPage"){
+                            //alert("Going to LoginPage after Merchant: "+ JSON.stringify(this.merchantManager.get_CurrentMerchant()));
+                            this.nav.push(LoginPage);
+                        }
+                        
+                    }
+                }
+            }catch(err){
+                alert("app.viewWillEnter.subscribe error: "+JSON.stringify(err));    
+            }   
+
+        });             
         });
+      
     }
 
     openPage(page) {

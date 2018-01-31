@@ -1,10 +1,17 @@
 import { User } from "../classes/user";
 
-
 export class Operator extends User{
-    permissions:Permission[] =[];
+
+
+    operatorNumber:string;
+    enabled:boolean = true;
+    permissions:any[] =[];
     isAdmin:boolean = false;
     isNetworkAdmin:boolean = false;
+    
+    constructor(){
+        super();
+    }
 }
 
 export class Permission{
@@ -15,6 +22,10 @@ export class Permission{
     canRead:boolean = false;
     canWrite:boolean = false;
     canExecute:boolean = false;
+
+    constructor(){
+
+    }
 }
 
 export class UserTier{

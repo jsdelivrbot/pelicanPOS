@@ -1,76 +1,226 @@
 <ion-header>
-
+        <div style="text-align:center; margin:auto;">
+                <h5>Setup for Terminal</h5>
+                <h6 style="font-size: xx-small;">{{this.terminalId}}</h6>
+            
+                <!-- <textarea   name="test" id="test" cols="30" rows="6"  style="width:100%; padding: 10px; margin-top: 3px;" >
+                    {{this.merchant|json}}
+    
+                </textarea> -->
+        </div>
+    
 </ion-header>
 <ion-content>
-    <h2>Setup for Terminal</h2>
-    <h3>{{this.terminalId}}</h3>
-    <ion-slides #slides (ionSlideDidChange)="slideChanged()">
+    <ion-slides #slides (ionSlideDidChange)="slideChanged()" noSwiping=true>
         <ion-slide>
             <h3>Merchant Setup</h3>
             <ion-list>
                     <ion-item>
-                            <ion-label floating>Telephone Number</ion-label>
+                            <ion-label floating>MerchantId <span class="sidenote">(tax id/tel etc.)</span></ion-label>
                             <ion-icon name="telephone" item-left></ion-icon>
-                            <ion-input type="number" ([NgModule])="username" Required></ion-input>
-                        </ion-item>
+                            <ion-input type="tel" [(ngModel)]="this.merchant._id" Required (change)="checkMerchant()"></ion-input>
+                    </ion-item>
                         <ion-item>
-                    <ion-label floating>Official Company Name (used for banking)</ion-label>
+                    <ion-label floating>Official Company Name <span class="sidenote">(as on bank account)</span></ion-label>
                     <ion-icon name="contact" item-left></ion-icon>
-                    <ion-input type="text" ([NgModule])="name"></ion-input>
+                    <ion-input type="text" [(ngModel)]="this.merchant.name"></ion-input>
                 </ion-item>
                 <ion-item>
-                        <ion-label floating>Display Name (what your customers call you)</ion-label>
+                        <ion-label floating>Display Name <span class="sidenote">(how your customers know you)</span></ion-label>
                         <ion-icon name="contact" item-left></ion-icon>
-                        <ion-input type="text"([NgModule])="displayname"></ion-input>
+                        <ion-input type="text"[(ngModel)]="this.merchant.displayName"></ion-input>
                 </ion-item>
             </ion-list>
 
         </ion-slide>
         <ion-slide>
                 <h3>Admin Account Setup</h3>
-                <ion-list>
-                    <ion-item>
+<ion-scroll  scrollY="true" style="height:150px" >
+        <ion-grid style="font-size:xx-small;">
+                <ion-row>
+                    <ion-col>Operator No.</ion-col>
+                    <ion-col>Display Name</ion-col>
+                    <ion-col>
+                        <button ion-button clear small (click)="addAdmin()">
+                            <ion-icon item-left name="ios-add-circle-outline"></ion-icon>
+                            <ion-label style="font-size:small;">&nbsp;&nbsp;Add Administrator</ion-label>
+                        </button>
+                         
+                        
+                    </ion-col>
+                </ion-row>
+                <ion-row (click)="SelectAdmin(o.operatorNumber)" class="row operator {{o.enabled?'enabled':'disabled'}} selectable" style="border:1px solid darkgrey"  *ngFor="let o of this.merchant.getOperators('isAdmin');  let i = index" style="border:soid 1px darkgrey;">
+                        
+                    <ion-col><label>{{o.operatorNumber}}</label></ion-col>
+                    <ion-col>
+                        <ion-label >{{o.displayName}}</ion-label>
+                    </ion-col>
+                    <ion-col>
+                        <button ion-button color="danger" (click)="delOperator(o.operatorNumber)">
+                            <ion-icon name="ios-trash-outline"></ion-icon>
+                        </button>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+</ion-scroll>
+
+        
+        <ion-list>
+                        <ion-item>
+                            <ion-label floating>Admin display name (shows up on reciepts)</ion-label>
+                            <ion-icon name="contact" item-left></ion-icon>
+                            <ion-input type="text"[(ngModel)]="getOperators()[currentIndex].displayName"></ion-input>
+                        </ion-item>
+                        <ion-item>
                             <ion-label floating>Admin username (telephone number)</ion-label>
                             <ion-icon name="contact" item-left></ion-icon>
-                            <ion-input type="number"([NgModule])="username"></ion-input>
+                            <ion-input type="number" [(ngModel)]="getOperators()[currentIndex].username"></ion-input>
                     </ion-item>
                     <ion-item>
-                            <ion-label floating>Admin password </ion-label>
-                            <ion-icon name="contact" item-left></ion-icon>
-                            <ion-input type="number" length="4" ([NgModule])="pin"></ion-input>
-                    </ion-item>
-                </ion-list>
+                        <ion-label floating>Admin password </ion-label>
+                        <ion-icon name="contact" item-left></ion-icon>
+                        <ion-input class="secure_text" type="tel" length="4" [(ngModel)]="adminPassword" (change)="setPin()"></ion-input>
+                </ion-item>
+            </ion-list>
     
         </ion-slide>
         <ion-slide>
                 <h3>Add Operators</h3>
-                <ion-grid>
-                        <ion-row>
-                                <ion-col>user number</ion-col>
+                <ion-scroll scrollX="true">
+                <ion-grid style="font-size:x-small;">
+                        <ion-row style="border:1px solid darkgrey" >
+                                <ion-col>operator no.</ion-col>
                                 <ion-col>Display Name</ion-col>
                                 <ion-col>pin</ion-col>
-                                <ion-col>Can Cashier ?</ion-col>
-                                <ion-col>Can Topup ?</ion-col>
+                                <ion-col>Permissions</ion-col>
+                                <ion-col>                                    
+                                    <button ion-button small (click)="addOperator()">
+                                        <ion-icon name="contact" item-left>
+                                        </ion-icon>
+                                        <ion-label style="font-size:xx-small;" item-right>&nbsp; + Add</ion-label>
+                                    </button>
+                                </ion-col>
                             </ion-row>
-                            <ion-row ng-repeat="user in this.merchant.operators">
-                                    <ion-col><label>{{o.number}}</label></ion-col>
-                                    <ion-col>
-                                        <ion-input ([NgModel])="o.displayname" type="text"></ion-input>
-                                    <</ion-col>
-                                    <ion-col>pin</ion-col>
-                                    <ion-col>Can Cashier ?</ion-col>
-                                    <ion-col>Can Topup ?</ion-col>
+                            <ion-row  class="row operator {{o.enabled?'enabled':'disabled'}}" style="border:1px solid darkgrey"  *ngFor="let o of this.merchant.getOperators();  let i = index" style="border:soid 1px darkgrey;">
+                                <ion-col><label>{{o.operatorNumber}}</label></ion-col>
+                                <ion-col>
+                                    <ion-input class="grid_input" [(ngModel)]="o.displayName" type="text"></ion-input>
+                                </ion-col>
+                                <ion-col>
+                                    <ion-input [(ngModel)]="operatorPassword[i]" type="number"></ion-input>
+                                </ion-col>
+                                <ion-col>
+                                    <ion-select class="grid_select"  placeholder="-none-" [(ngModel)]="o.permissions"  multiple="true" >
+                                        <ion-option *ngFor="let perm of this.getPermissionOptions()" [value]="perm.id"  [selected]= "perm.value==true || o.isAdmin">{{perm.name}} </ion-option>
+                                    </ion-select>
+                                </ion-col>
+
+                                <ion-col> 
+                                    <button ion-button small color="{{o.enabled?'danger':'primary'}}" [disabled]="i == 0"  (click)="this.toggleOperatorEnabled(i)">                                        
+                                        <ion-label style="font-size:xx-small;" >{{o.enabled?'disable':'enable'}}</ion-label>
+                                    </button>
+                                </ion-col>
                                 </ion-row>
                             </ion-grid>
-        </ion-slide>
+                        </ion-scroll>
+                    </ion-slide>
         <ion-slide>
-            Bank Account Info
+            Confirm Page
+            <div>
+                <ion-list no-lines>
+                    <ion-item>
+                    <ion-label><ion-card>
+                        <ion-row>
+                            <ion-col><h2>Merchant info</h2></ion-col>
+                            <ion-col><button style="font-size: xx-small" ion-button clear small (click)="goto(0)">( edit )</button></ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col>
+                                    <div>Id: {{this.merchant._id}}</div>
+                                    <div>Name: {{this.merchant.name}}</div>
+                                    <div>DisplayName: {{this.merchant.displayName}}</div>
+            
+                            </ion-col>
+                        </ion-row>
+
+                    </ion-card>
+                    </ion-label>
+                </ion-item>
+
+                <ion-item>
+                        <ion-label><ion-card>
+                            <ion-row>
+                                <ion-col><h2>Admins</h2></ion-col>
+                                <ion-col><button style="font-size: xx-small" ion-button clear small (click)="goto(1)">( edit )</button></ion-col>
+                            </ion-row>
+                            <ion-row>
+                                <ion-col>
+                                    <ion-grid>
+                                        <ion-row>
+                                            <ion-col>Operator No.</ion-col>
+                                            <ion-col>Display Name</ion-col>
+                                            <ion-col>Password</ion-col>
+                                            <ion-col>Permissions</ion-col>
+                                        </ion-row>
+                                        <ion-row  class="row operator {{o.enabled?'enabled':'disabled'}}" style="border:1px solid darkgrey"  *ngFor="let o of this.merchant.getOperators('isAdmin');  let i = index" style="border:soid 1px darkgrey;">
+                                            <ion-col><label>{{o.operatorNumber}}</label></ion-col>
+                                            <ion-col>
+                                                <ion-label class="grid_input">{{o.displayName}}</ion-label>
+                                            </ion-col>
+                                            <ion-col>
+                                                <ion-label>{{operatorPassword[i]}}</ion-label>
+                                            </ion-col>
+                                            <ion-col>
+                                                <ion-label>{{o.permissions}}</ion-label>
+                                            </ion-col>
+                                        </ion-row>
+                                    </ion-grid>
+                                </ion-col>
+                            </ion-row>
+                        </ion-card>
+                    </ion-label>
+                </ion-item>                
+                <ion-item>
+                        <ion-label><ion-card>
+                            <ion-row>
+                                <ion-col><h2>Operators</h2></ion-col>
+                                <ion-col><button style="font-size: xx-small" ion-button clear small (click)="goto(2)">( edit )</button></ion-col>
+                            </ion-row>
+                            <ion-row>
+                                <ion-col>
+                                    <ion-grid>
+                                        <ion-row>
+                                            <ion-col>Operator No.</ion-col>
+                                            <ion-col>Display Name</ion-col>
+                                            <ion-col>Password</ion-col>
+                                            <ion-col>Permissions</ion-col>
+                                        </ion-row>
+                                        <ion-row  class="row operator {{o.enabled?'enabled':'disabled'}}" style="border:1px solid darkgrey"  *ngFor="let o of this.merchant.getOperators('!administrator');  let i = index" style="border:soid 1px darkgrey;">
+                                            <ion-col><label>{{o.operatorNumber}}</label></ion-col>
+                                            <ion-col>
+                                                <ion-label class="grid_input">{{o.displayName}}</ion-label>
+                                            </ion-col>
+                                            <ion-col>
+                                                <ion-label>{{operatorPassword[i]}}</ion-label>
+                                            </ion-col>
+                                            <ion-col>
+                                                <ion-label>{{o.permissions}}</ion-label>
+                                            </ion-col>
+                                        </ion-row>
+                                    </ion-grid>
+                                </ion-col>
+                            </ion-row>
+                        </ion-card>
+                    </ion-label>
+                </ion-item>
+            </ion-list>
+            </div>
         </ion-slide>
     </ion-slides>
     <ion-footer>
         <div class="footer-bar">
-        <button ion-button #btnPrev (click)="btnPress('prev')">< Back</button>
-        <button ion-button #btnNext (click)="btnPress('next')">Next ></button>
+        <button ion-button #btnPrev (click)="btnPress('prev')"> {{btnBackText}}</button>
+        <button ion-button [color]="btnNextText == 'SAVE'?'danger':primary" #btnNext (click)="btnPress('next')">{{btnNextText}}</button>
         </div>
     </ion-footer>
 </ion-content>

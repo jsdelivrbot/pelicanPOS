@@ -59,6 +59,8 @@ export class Crypto{
     separateIvFromData(buf: Uint8Array) {
       const iv = new Uint8Array(this.ivLen);
       const data = new Uint8Array(buf.length - this.ivLen);
+
+      /*
       buf.forEach((byte, i) => {
         if (i < this.ivLen) {
           iv[i] = byte;
@@ -67,9 +69,22 @@ export class Crypto{
         }
       });
       return {iv: iv, data: data};
+      */
+
+      console.log("Crypto.separateIvFromData("+JSON.stringify(buf)+")");
+     for(let i=0; i < buf.length; i++){
+      let byte = buf[i];
+
+      if (i < this.ivLen) {
+        iv[i] = byte;
+      } else {
+        data[i - this.ivLen] = byte;
+      }
+    }
+    return {iv: iv, data: data};
     }
   
-    encrypt(data) {
+    encrypt(data):PromiseLike<Uint8Array> {
       const initializationVector = new Uint8Array(this.ivLen);
       crypto.getRandomValues(initializationVector);
       return crypto.subtle.encrypt({
@@ -84,10 +99,15 @@ export class Crypto{
     decrypt(buffer: Uint8Array): Promise<string> {
       console.log(">>>>> crypto.decrypt(bufferd): ");
       
-      const parts = this.separateIvFromData(buffer);
-      console.log(">>>>> crypto.decrypt(bufferd): parts ");
       return new Promise<string>((res,rej)=>{
 
+        if(buffer.length == 0){
+          rej("no pin detected")
+        }
+        const parts = this.separateIvFromData(buffer);
+        console.log(">>>>> crypto.decrypt(bufferd): parts ");
+
+          
         console.log(">>>>> crypto.decrypt(bufferd): about to decrypt ");
         return window.crypto.subtle.decrypt({
             name: "AES-GCM",

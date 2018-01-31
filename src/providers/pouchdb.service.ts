@@ -39,8 +39,15 @@ export class PouchDBService {
         return this.database.allDocs({ include_docs: true });
     }
 
-    public get(id: string) {
-        return this.database.get(id);
+    public get(id: string):any{
+        return this.database.get(id).then(o=>{
+            console.log(">>>>>>>>> PouchbdService.get('"+id+"') here: ");
+            console.log(">>>>>>>>> PouchbdService.get('"+id+"') found: "+JSON.stringify(o));
+            return o;
+        }).catch(err=>{
+            console.log("********** PouchbdService.get('"+id+"') error: "+JSON.stringify(err));
+            return err;
+        });
     }
 
     public put(id: string, document: any) {

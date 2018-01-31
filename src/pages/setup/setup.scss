@@ -1,14 +1,88 @@
 page-setup{
 
+    
+    ion-row.row.operator.enabled.selectable:hover {
+        background-color: slategray !important;
+        height: 49%;
+    }
+
+    ion-app {
+        content: "";
+        background: url('/assets/imgs/graywood_bg.png');
+        opacity: 0.5;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        position: absolute;
+        z-index: -1;   
+      }
+
+    .sidenote{
+        font-size: xx-small;
+    }
+      .item-md{
+        background-color: #efefef38;
+    }
+
+    .grid_input{
+        border: 1px solid #efefef;
+        margin: auto;
+        width: 99%;        
+    }
+
+    .grid_select{
+        padding:0 !important;
+        overflow: visible;
+    }
+
+    .hyperlink {
+        background:none!important;
+        color:inherit;
+        border:none; 
+        padding:0!important;
+        font: inherit;
+        /*border is optional*/
+        border-bottom:1px solid #444; 
+        cursor: pointer;
+   }
+
+    .disabled{
+        text-decoration: line-through;
+        color:goldenrod;
+        font-style: italic;
+
+    }
+
+    ion-scroll.scroll-x .scroll-content {
+        overflow-x: auto;
+        overflow-y: auto;
+        height: 300px;
+    }
+
+    div.scroll-zoom-wrapper{
+        height: 70% !important;
+    }
     ion-slide.swiper-slide {
         align-items: flex-start;
+        overflow: auto;
     }
     
+    .col{
+        border:.25px solid #a9a9a938 !important;
+        overflow: hidden;
+    }
+
+
     .footer-bar{
         margin:auto;
         text-align: center;
     }
     .footer-bar .button-md{
         margin: 5px 12%;
+    }
+
+    .secure_text{
+      -webkit-text-security: disc;
     }
 }
