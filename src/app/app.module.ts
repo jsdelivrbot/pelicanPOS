@@ -43,6 +43,9 @@ import { UniqueDeviceID } from '@ionic-native/unique-device-id';
 import { SetupPage } from '../pages/setup/setup';
 import {TransactionPage} from '../pages/transaction/transaction';
 
+import {PipesModule} from '../pipes/pipes.module';
+
+
 @NgModule({
   declarations: [
     MyApp,
@@ -59,12 +62,14 @@ import {TransactionPage} from '../pages/transaction/transaction';
     ConfirmPayPage,
     LoginPage,
     SetupPage,
-    TransactionPage
+    TransactionPage,
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    SuperTabsModule.forRoot()
+    SuperTabsModule.forRoot(),
+    PipesModule
+
   ],
   bootstrap: [IonicApp],
   entryComponents: [

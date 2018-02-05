@@ -89,6 +89,16 @@ export class MenuPage {
       this.navCtrl.push(TransactionPage);
       console.log("Here 4");
       break;
+
+      
+      case '3':
+      console.log("Here 5");
+      this.merchantManager.remove_localMerchants();
+      this.merchantManager.set_CurrentMerchant(null);
+      this.userManager.set_CurrentUser(null);
+      this.navCtrl.popToRoot();
+      console.log("Here 6");
+      break;
       
     }
   }  

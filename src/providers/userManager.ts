@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { FastpassContact } from '../classes/fastpassContact';
@@ -9,6 +9,7 @@ import { Crypto } from '../providers/crypto';
 import { useAnimation } from '@angular/core/src/animation/dsl';
 import { Merchant } from '../classes/merchant';
 import { Operator } from '../classes/operator';
+import { TransactionManager } from './TransactionManager';
 
 
 /*
@@ -28,9 +29,40 @@ export class UserManager {
 
 
 
-    constructor(private pouchDbService: PouchDBService, private crypto:Crypto) {
+    constructor(private pouchDbService: PouchDBService, private crypto:Crypto, private zone:NgZone) {
         //setup pouchDb database and sync to remote
         this.db = pouchDbService;
+
+
+        /*** not needed pulling it off the fetch in each Provider 
+        //subscribe to User Changes
+        this.db.getChangeListener().subscribe(data => {
+            alert("DbChange Detected:");
+            for(let i = 0; i < data.change.docs.length; i++) {
+                let doc =  data.change.docs[i];
+
+                if(!doc.type){
+                    alert("Document with no type detected: "+JSON.stringify(doc));
+                    return;
+                }
+
+                if(doc.type.toLowerCase().trim() == "User"){
+                    alert("User change detected: "+JSON.stringify(doc));
+                }
+                else if(doc.type == "memberaccount.userpayment"){
+                    alert("Payment detected: "+JSON.stringify(doc));
+                    let tm:TransactionManager = null;
+                    tm.getTransactions
+
+                }
+                else{
+                    alert("Unhandled type detected: "+JSON.stringify(doc));
+                }
+                this.zone.run(() => {
+                    this.people.push(data.change.docs[i]);
+                });
+            }
+        });*/
     }
 
     create(id, displayName: string, phoneNumbers: string[]): Promise<User> {
@@ -220,19 +252,28 @@ export class UserManager {
     getPin(user:User):Promise<string>{
         return new Promise<string>((res,rej)=>{
             console.log(">>>>> userManager.getPin(user) user: "+JSON.stringify(user));
-            let pin:string = null;
-            
-            if(!user ||!user.pin || user.pin.length == 0){
-                return res("");
-            }
 
-           this.crypto.decrypt(user.pin).then(o=>{
+
+            let pin:string = "";
+            let str = JSON.stringify(user.pin, null, 0);
+            let ret = new Uint8Array(str.length);
+            for (let i = 0; i < str.length; i++) {
+                ret[i] = str.charCodeAt(i);
+            }
+            
+            console.log(">>>>> userManager.getPin(user) p: " + JSON.stringify(ret)); 
+            console.log(">>>>> userManager.getPin(user) p.length: " +ret.length); 
+            this.crypto.decrypt(ret).then(o=>{
                 console.log(">>>>> userManager.getPin(user) user: "+JSON.stringify(user)+" decrypted value is: "+JSON.stringify(o));
                 pin= o;
                 res(o);
             });
     
         });
+        
+    }
+
+    get_AvailableBalance(user:User){
         
     }
 }

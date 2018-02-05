@@ -173,10 +173,12 @@ export class SetupPage implements AfterViewInit{
                                     let t:Terminal = new Terminal();
                                     t._id = "terminal_"+this.terminalId;
                                     t.merchantIds.push(this.merchant._id);
-                                    
+                                    alert("put from setup");
                                     this.merchantManager.fastPassDb.put(t._id,t).then(a1=>{
                                         console.log(">>>>>>>> Merchant Data Saved returned: "+JSON.stringify(o));
                                         this.merchantManager.set_localMerchants(t).then(()=>{
+                                            console.log(">>>>>>>> About to push to MenuPage: ");
+
                                             this.navCtrl.push(MenuPage);
                                             //this.merchantManager.set_CurrentMerchant(this.merchant);
                                         })  

@@ -44,16 +44,30 @@ export class MerchantManager{
         });
     }
 
+
+    remove_localMerchants(){
+
+        this.get_localMerchants().then(o=>{
+            this.fastPassDb.remove('_local/fastPassPOS');
+            return;
+        }).catch(err=>{
+            return;
+        });
+    }
+
+
     set_localMerchants(data:Terminal):Promise<any>{
 
         return new Promise<any>((res,rej)=>{
 
+            alert("about to put setting localMerchants in MerchantManager");    
             this.fastPassDb.put('_local/fastPassPOS',data).then(o=>{
                 res(o);
             }).catch(err=>{
                 rej(err);
             });
         });
+
     }
     
     get_CurrentMerchant():Merchant{

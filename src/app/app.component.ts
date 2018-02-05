@@ -91,9 +91,13 @@ export class MyApp {
                             this.nav.setRoot(this.myPage);
                         });
                 }
+                else{
+                    this.nav.setRoot(SetupPage);
+                }
 
             }).catch(err=>{
-                console.log("************ app.components.initializeApp()error getting Merchant: "+JSON.stringify(err));
+                console.log("************ app.components.initializeApp()error getting Merchant going to setup page: "+JSON.stringify(err));
+                this.nav.setRoot(SetupPage);
                 
             }); //END OF TERMINAL
             

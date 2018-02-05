@@ -7,29 +7,43 @@
             <button ion-button icon-only (click)="createTodo()"><ion-icon name="cloud-upload"></ion-icon></button>
           </ion-buttons>
         </ion-navbar>
-      </ion-header>
+        <ion-list>
+          <ion-list-header>
+            <div class="row">
+                <div class="col" text-wrap style="font-size:small;">Date</div>
+                <div class="col"><p text-wrap>Description</p></div>
+                <div class="col">Amount</div>
+                <div class="col"></div>
+            </div>  
+        </ion-list-header>
+        </ion-list>
+</ion-header>
        
       <ion-content>
        
-        <ion-list no-lines>
+        <ion-list>
        
-          <ion-item-sliding *ngFor="let transaction of transactions">
-       
-            <ion-item>
-       
-             <ion-label>{{transaction.description}}</ion-label> 
-       
+          <ion-item *ngFor="let r of this.transactions| sort:sortArgs;let i = index">
+              <button ion-button (click)="this.testMe(r,i)" item-right>click and learn</button>
+                <ion-label>
+                    <div class="row">
+                        <div class="col" text-wrap style="font-size:small;">{{ this.dateToString(r.id)}}</div>
+                        <div class="col"><p text-wrap>{{r.doc.description}}</p></div>
+                        <div class="col">{{r.value | currency:'USD':true:'1.1-2'}}</div>
+                      </div>  
+                </ion-label>
             </ion-item>
-       
-            <ion-item-options>
-              <button ion-button icon-only color="light" (click)="updateTodo(todo)">
-                <ion-icon name="create"></ion-icon>
-              </button>
-              <button ion-button icon-only color="primary" (click)="deleteTodo(todo)">
-                <ion-icon name="checkmark"></ion-icon>
-              </button>
-            </ion-item-options>
-          </ion-item-sliding>
+            
+            <ion-item>
+              <ion-item-options>
+                <button ion-button icon-only color="light" (click)="updateTodo(todo)">
+                  <ion-icon name="create"></ion-icon>
+                </button>
+                <button ion-button icon-only color="primary" (click)="deleteTodo(todo)">
+                  <ion-icon name="checkmark"></ion-icon>
+                </button>
+              </ion-item-options>
+          </ion-item>
        
         </ion-list>
        

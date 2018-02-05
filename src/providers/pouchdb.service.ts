@@ -27,9 +27,8 @@ export class PouchDBService {
             };
 
             this.database.sync(this.remote, options).on('change',function (change){
-                console.log("pouchdbservice.constructor()=> onReplicationChanged- remote: "+this.remote+JSON.stringify(change));
+                //console.log("pouchdbservice.constructor()=> onReplicationChanged- remote: "+this.remote+JSON.stringify(change));
             }).on('error', function(err){console.log("pouchdbService(): remote: "+this.remote+" - DB SYNCH ERRROR: "+JSON.stringify(err));});
-
 
             this.isInstantiated = true;
         }
@@ -39,14 +38,27 @@ export class PouchDBService {
         return this.database.allDocs({ include_docs: true });
     }
 
+    public query (designView:string, params:any){
+        return this.database.query(designView,params);
+    }
+
+
     public get(id: string):any{
+
         return this.database.get(id).then(o=>{
-            console.log(">>>>>>>>> PouchbdService.get('"+id+"') here: ");
-            console.log(">>>>>>>>> PouchbdService.get('"+id+"') found: "+JSON.stringify(o));
+            //console.log(">>>>>>>>> PouchbdService.get('"+id+"') here: ");
+            //console.log(">>>>>>>>> PouchbdService.get('"+id+"') found: "+JSON.stringify(o));
             return o;
         }).catch(err=>{
-            console.log("********** PouchbdService.get('"+id+"') error: "+JSON.stringify(err));
+            //console.log("********** PouchbdService.get('"+id+"') error: "+JSON.stringify(err));
             return err;
+        });
+    }
+
+    public remove(id:string){
+        this.get(id).then(o=>{
+            this.database.remove(o);
+            return;
         });
     }
 

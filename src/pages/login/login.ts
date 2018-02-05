@@ -48,6 +48,7 @@ export class LoginPage implements AfterViewInit {
 
         this.updateFields();
         if(this.code.length == this.codeLength){
+            console.log("about to login");
             this.login();
         }
                
