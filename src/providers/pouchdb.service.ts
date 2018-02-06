@@ -6,7 +6,7 @@ import { Config } from '../providers/configProvider';
 export class PouchDBService {
 
     private isInstantiated: boolean;
-    private database: PouchDB;
+    public database: PouchDB;
     private listener: EventEmitter<any> = new EventEmitter();
    
 

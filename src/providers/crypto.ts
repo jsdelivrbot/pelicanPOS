@@ -96,31 +96,86 @@ export class Crypto{
       ).then(encrypted => this.joinIvAndData(initializationVector, new Uint8Array(encrypted)));
     }
   
-    decrypt(buffer: Uint8Array): Promise<string> {
-      console.log(">>>>> crypto.decrypt(bufferd): ");
-      
+    decrypt(d:any): Promise<string> {
+
+      let string = btoa(unescape(encodeURIComponent(JSON.stringify(d)))),
+      charList = string.split(''),
+      uintArray = [];
+  for (let i = 0; i < charList.length; i++) {
+      uintArray.push(charList[i].charCodeAt(0));
+  }
+
+      console.log("TESTYZ");   
+      let b = d// new Uint8Array(uintArray);
+      console.log("TESTYZ1");   
+      //let b = this.textEncoder.encode(JSON.stringify(d));
+
+
+      console.log("TESTY2");
       return new Promise<string>((res,rej)=>{
 
-        if(buffer.length == 0){
-          rej("no pin detected")
+          console.log("TESTY2");
+          //let str = this.Utf8ArrayToStr(b);
+          //console.log(">>>>> crypto.decrypt(bufferd): b is: '"+ JSON.stringify(b)+"; str:  '"+str+"'");
+          
+
+        if(b.length == 0){
+          rej("no pin detected?")
         }
-        const parts = this.separateIvFromData(buffer);
+        const parts = this.separateIvFromData(b);
         console.log(">>>>> crypto.decrypt(bufferd): parts ");
 
           
         console.log(">>>>> crypto.decrypt(bufferd): about to decrypt ");
         return window.crypto.subtle.decrypt({
-            name: "AES-GCM",
-            iv: parts.iv
-          },
-          this.aesKey,
-          parts.data
+          name: 'AES-GCM',
+          iv: parts.iv},
+        this.aesKey,
+        parts.data
         ).then(decryptedBuffer => {
           console.log(">>>>> crypto.decrypt(bufferd): have decryptBuffer ");
           const decryptedString = this.textDecoder.decode(new Uint8Array(decryptedBuffer));
           console.log(">>>>> crypto.decrypt(bufferd): decryptedString: " + decryptedString);
           res(decryptedString);
-        });
+        },(err=>{
+          let ex =  "Throw error: "+JSON.stringify(err);
+          rej(ex);
+        }));
     });
+  }
+
+
+
+  Utf8ArrayToStr(array):string {
+      var out, i, len, c;
+      var char2, char3;
+
+      out = "";
+      len = array.length;
+      i = 0;
+      while(i < len) {
+        c = array[i++];
+        switch(c >> 4)
+        { 
+          case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
+            // 0xxxxxxx
+            out += String.fromCharCode(c);
+            break;
+          case 12: case 13:
+            // 110x xxxx   10xx xxxx
+            char2 = array[i++];
+            out += String.fromCharCode(((c & 0x1F) << 6) | (char2 & 0x3F));
+            break;
+          case 14:
+            // 1110 xxxx  10xx xxxx  10xx xxxx
+            char2 = array[i++];
+            char3 = array[i++];
+            out += String.fromCharCode(((c & 0x0F) << 12) |
+                          ((char2 & 0x3F) << 6) |
+                          ((char3 & 0x3F) << 0));
+            break;
+        }
+    }
+    return out;
   }
 }

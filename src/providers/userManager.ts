@@ -10,6 +10,7 @@ import { useAnimation } from '@angular/core/src/animation/dsl';
 import { Merchant } from '../classes/merchant';
 import { Operator } from '../classes/operator';
 import { TransactionManager } from './TransactionManager';
+import { TextEncoder } from 'text-encoding-shim';
 
 
 /*
@@ -249,25 +250,34 @@ export class UserManager {
         });
     }
 
-    getPin(user:User):Promise<string>{
-        return new Promise<string>((res,rej)=>{
-            console.log(">>>>> userManager.getPin(user) user: "+JSON.stringify(user));
+    getPin(user:any):Promise<string>{
 
+        return new Promise<string>((res,rej)=>{
+            //console.log(">>>>> userManager.getPin(user) user: "+JSON.stringify(user));
+
+
+            this.pouchDbService.database.get(user._id).then(o=>{
+
+                let p = new Uint8Array(o);
 
             let pin:string = "";
-            let str = JSON.stringify(user.pin, null, 0);
-            let ret = new Uint8Array(str.length);
-            for (let i = 0; i < str.length; i++) {
-                ret[i] = str.charCodeAt(i);
-            }
-            
-            console.log(">>>>> userManager.getPin(user) p: " + JSON.stringify(ret)); 
-            console.log(">>>>> userManager.getPin(user) p.length: " +ret.length); 
-            this.crypto.decrypt(ret).then(o=>{
-                console.log(">>>>> userManager.getPin(user) user: "+JSON.stringify(user)+" decrypted value is: "+JSON.stringify(o));
-                pin= o;
-                res(o);
+            //let str = JSON.stringify(user.pin);
+            //let test:any[] =  (user.pin as any);
+
+
+            //console.log("compare: ret: '"+JSON.stringify(ret)+"; with pin: '"+ JSON.stringify(user.pin)+"'");
+            //console.log("compare: ret len: '"+ret.length+"; with pin len: '"+ JSON.stringify(user.pin.length)+"'");
+            //console.log(">>>>> userManager.getPin(user) p: " + JSON.stringify(ret)); 
+//            console.log(">>>>> userManager.getPin(user) p.length: " +ret.length); 
+            this.crypto.decrypt(o.pin).then(b=>{
+                console.log(">>>>> userManager.getPin(user) user: "+JSON.stringify(user)+" decrypted value is: "+JSON.stringify(b));
+                pin= b;
+                res(b);
             });
+        }).catch(err=>{
+            console.log(">>>>> userManager.getPin(): error "+JSON.stringify(err));
+            rej(err);
+        });
     
         });
         
